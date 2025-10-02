@@ -12,6 +12,7 @@ from plugins.manager import PluginManager
 import run_plugins
 from utils import get_apply_file_path, get_plan_file_path, is_allowed_file, is_file_exists, get_file_path
 from settings import UPLOAD_FOLDER, MAX_CONTENT_LENGTH
+import atexit
 
 import pandas as pd
 
@@ -27,6 +28,7 @@ os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'plan'), exist_ok=True)
 
 # Инициализация менеджера плагинов
 plugin_manager = PluginManager()
+atexit.register(plugin_manager.close_all)
 
 # Ensure the upload folder exists
 if not os.path.exists(UPLOAD_FOLDER):
@@ -314,5 +316,4 @@ def aggregate_results(plugin_results):
 
 
 if __name__ == '__main__':
-    run_plugins.run_plugins()
     app.run(debug=True, host='0.0.0.0', port=5000)
