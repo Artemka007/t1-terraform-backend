@@ -1,0 +1,6 @@
+#### Start application
+```bash
+pip install -r requirements.txt
+python run_plugins.py
+python main.py
+```
