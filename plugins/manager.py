@@ -8,9 +8,9 @@ from plugins_config import PLUGINS_CONFIG, PluginClient
 class PluginManager:
     def __init__(self):
         self.plugins: Dict[str, PluginClient] = {}
-        self._initialize_plugins()
+        self.initialize_plugins()
     
-    def _initialize_plugins(self):
+    def initialize_plugins(self):
         """Инициализация плагинов"""
         for name, config in PLUGINS_CONFIG.items():
             plugin = PluginClient(name, config)

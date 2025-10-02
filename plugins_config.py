@@ -13,19 +13,19 @@ from plugins.models import plugin_pb2, plugin_pb2_grpc
 # Конфигурация плагинов
 PLUGINS_CONFIG = {
     "error-aggregator": {
-        "host": "localhost",
+        "host": "error-aggregator",
         "port": 50051,
         "description": "Анализатор ошибок и паттернов",
         "capabilities": ["error_analysis", "pattern_detection"]
     },
     "security-scanner": {
-        "host": "localhost", 
+        "host": "security-scanner", 
         "port": 50052,
         "description": "Сканер безопасности и чувствительных данных",
         "capabilities": ["security_scanning", "sensitive_data_detection"]
     },
     "performance-analyzer": {
-        "host": "localhost",
+        "host": "performance-analyzer",
         "port": 50053, 
         "description": "Анализатор производительности",
         "capabilities": ["performance_analysis", "bottleneck_detection"]

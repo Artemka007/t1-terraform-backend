@@ -246,7 +246,7 @@ def analyze_with_plugins(filename: str):
             plugins = None
         
         # Обновление доступных плагинов
-        plugin_manager.discover_plugins()
+        plugin_manager.initialize_plugins()
         
         # Конвертация логов
         log_entries = LogEntryConverter.from_json_to_proto(log_data)
@@ -266,7 +266,7 @@ def analyze_with_plugins(filename: str):
 @app.route('/api/v1/plugins', methods=['GET'])
 def list_plugins():
     """Список доступных плагинов"""
-    plugin_manager.discover_plugins()
+    plugin_manager.initialize_plugins()
     
     plugins_info = {}
     for name, stub in plugin_manager.plugins.items():
