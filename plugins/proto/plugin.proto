@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package terraform.analyzer;
+
+service PluginService {
+  rpc Process(ProcessRequest) returns (ProcessResponse);
+  rpc GetInfo(InfoRequest) returns (InfoResponse);
+  rpc HealthCheck(HealthRequest) returns (HealthResponse);
+}
+
+message ProcessRequest {
+  repeated LogEntry entries = 1;
+  map<string, string> parameters = 2;
+  string plugin_config = 3;
+}
+
+message LogEntry {
+  string level = 1;
+  string message = 2;
+  string timestamp = 3;
+  map<string, string> metadata = 4;
+}
+
+message ProcessResponse {
+  AnalysisResult result = 1;
+  repeated Finding findings = 2;
+  map<string, string> metrics = 3;
+}
+
+message AnalysisResult {
+  string summary = 1;
+  int32 processed_count = 2;
+  int32 finding_count = 3;
+  string severity_level = 4;
+}
+
+message Finding {
+  string type = 1;
+  string severity = 2; // LOW, MEDIUM, HIGH, CRITICAL
+  string message = 3;
+  string resource = 4;
+  repeated string recommendations = 5;
+  map<string, string> metadata = 6;
+}
+
+message InfoRequest {}
+
+message InfoResponse {
+  string name = 1;
+  string version = 2;
+  string description = 3;
+  repeated string capabilities = 4;
+  repeated string supported_parameters = 5;
+}
+
+message HealthRequest {}
+
+message HealthResponse {
+  string status = 1;
+  string timestamp = 2;
+}
