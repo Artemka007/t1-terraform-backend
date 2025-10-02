@@ -16,6 +16,18 @@ def get_file_path(filename: str):
     return os.path.join(UPLOAD_FOLDER, safe_filename)
 
 
+def get_apply_file_path(filename: str):
+    """Get safe file path within upload folder"""
+    safe_filename = secure_filename(filename)
+    return os.path.join(UPLOAD_FOLDER, 'apply', safe_filename)
+
+
+def get_plan_file_path(filename: str):
+    """Get safe file path within upload folder"""
+    safe_filename = secure_filename(filename)
+    return os.path.join(UPLOAD_FOLDER, 'plan', safe_filename)
+
+
 def is_file_exists(filename: str):
     """Check if file exists in upload folder"""
     filepath = get_file_path(filename)

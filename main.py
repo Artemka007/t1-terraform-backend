@@ -6,8 +6,11 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 from flask_cors import CORS
 
-from utils import is_allowed_file, is_file_exists, get_file_path
+from parser import Parser
+from utils import get_apply_file_path, get_plan_file_path, is_allowed_file, is_file_exists, get_file_path
 from settings import UPLOAD_FOLDER, MAX_CONTENT_LENGTH
+
+import pandas as pd
 
 app = Flask(__name__)
 CORS(app)
@@ -47,6 +50,21 @@ def upload_json():
 
     with open(filepath, 'w') as f:
         json.dump(json_data, f)
+    
+    parser = Parser(pd.json_normalize(json_data))
+
+    a = parser.extract_apply_section()
+    p = parser.extract_plan_section()
+    
+    apply_filepath = os.path.join(app.config['UPLOAD_FOLDER'], 'apply', filename)
+    plan_filepath = os.path.join(app.config['UPLOAD_FOLDER'], 'apply', filename)
+
+    if a:
+        with open(apply_filepath, 'w') as f:
+            json.dump(a, f)
+    if p:
+        with open(plan_filepath, 'w') as f:
+            json.dump(p, f)
 
     try:
         return jsonify({
@@ -88,6 +106,27 @@ def get_log_file(filename: str):
         return jsonify({'error': f'Error reading JSON file: {str(e)}'}), 500
     except Exception as e:
         return jsonify({'error': f'Error reading file: {str(e)}'}), 500
+
+
+
+@app.route('/api/v1/sections/file/<filename>', methods=['GET'])
+def get_apply_plan_sections_file(filename: str):
+    """Get log file by filename"""
+    if not filename:
+        return jsonify({'error': 'Filename is required'}), 400
+
+    afilepath = get_apply_file_path(filename)
+    pfilepath = get_plan_file_path(filename)
+
+    res = {'apply': None, 'plan': None}
+
+    try:
+        with open(afilepath, 'r', encoding='utf-8') as f:
+            res = json.load(f)
+    except Exception:
+        pass
+
+    return jsonify(res), 200
 
 
 if __name__ == '__main__':
